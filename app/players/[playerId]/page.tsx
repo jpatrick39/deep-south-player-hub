@@ -196,7 +196,35 @@ export default async function PlayerPage({
 
         <EditPlayerForm player={player} />
 
-        <VideoUploader playerId={player.id} />
+        <div className="mt-8">
+  <h2 className="text-2xl font-bold mb-4">Recruiting Videos</h2>
+
+  <div className="grid md:grid-cols-2 gap-4">
+    <VideoUploader
+      playerId={player.id}
+      fieldName="recruiting_video_url"
+      label="Recruiting Video"
+    />
+
+    <VideoUploader
+      playerId={player.id}
+      fieldName="hitting_video_url"
+      label="Hitting Video"
+    />
+
+    <VideoUploader
+      playerId={player.id}
+      fieldName="fielding_video_url"
+      label="Fielding Video"
+    />
+
+    <VideoUploader
+      playerId={player.id}
+      fieldName="pitching_video_url"
+      label="Pitching Video"
+    />
+  </div>
+</div>
 
         <PlayerMetrics metrics={metrics || []} />
 
