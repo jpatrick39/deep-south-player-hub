@@ -86,18 +86,18 @@ export default async function PlayerPage({
   );
 
   return (
-    <main className="min-h-screen bg-slate-100 p-8">
-      <div className="max-w-5xl mx-auto bg-white rounded-xl shadow p-8">
-        <div className="flex gap-8 items-start">
+    <main className="min-h-screen bg-slate-100 p-4 md:p-8">
+      <div className="mx-auto max-w-5xl rounded-xl bg-white p-4 shadow md:p-8">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start">
           <div>
             {player.photo_url ? (
               <img
                 src={player.photo_url}
                 alt={player.name}
-                className="w-48 h-48 object-cover rounded-xl border"
+                className="h-40 w-40 rounded-xl border object-cover md:h-48 md:w-48"
               />
             ) : (
-              <div className="w-48 h-48 bg-gray-200 rounded-xl border flex items-center justify-center text-gray-500">
+              <div className="flex h-40 w-40 items-center justify-center rounded-xl border bg-gray-200 text-gray-500 md:h-48 md:w-48"
                 No Photo
               </div>
             )}
@@ -196,7 +196,35 @@ export default async function PlayerPage({
 
         <EditPlayerForm player={player} />
 
-        <VideoUploader playerId={player.id} />
+        <div className="mt-8">
+  <h2 className="text-2xl font-bold mb-4">Recruiting Videos</h2>
+
+  <div className="grid md:grid-cols-2 gap-4">
+    <VideoUploader
+      playerId={player.id}
+      fieldName="recruiting_video_url"
+      label="Recruiting Video"
+    />
+
+    <VideoUploader
+      playerId={player.id}
+      fieldName="hitting_video_url"
+      label="Hitting Video"
+    />
+
+    <VideoUploader
+      playerId={player.id}
+      fieldName="fielding_video_url"
+      label="Fielding Video"
+    />
+
+    <VideoUploader
+      playerId={player.id}
+      fieldName="pitching_video_url"
+      label="Pitching Video"
+    />
+  </div>
+</div>
 
         <PlayerMetrics metrics={metrics || []} />
 

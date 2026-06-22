@@ -60,7 +60,7 @@ export default function CollegeImportPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 p-8">
+    <main className="min-h-screen bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-5xl rounded-xl bg-white p-8 shadow">
         <h1 className="text-4xl font-bold">College Import Tool</h1>
         <p className="mt-2 text-gray-600">

@@ -26,7 +26,7 @@ export default async function DashboardPage() {
   const metricCount = metrics?.length || 0;
 
   return (
-    <main className="min-h-screen bg-slate-100 p-8">
+    <main className="min-h-screen bg-slate-100 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold">Deep South Player Hub</h1>
