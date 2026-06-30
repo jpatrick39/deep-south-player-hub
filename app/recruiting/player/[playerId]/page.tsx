@@ -1,4 +1,5 @@
 import { supabase } from "../../../../lib/supabase";
+import RecruitingScoreCard from "@/components/RecruitingScoreCard";
 
 export default async function PublicRecruitingProfile({
   params,
@@ -62,6 +63,10 @@ export default async function PublicRecruitingProfile({
                 )}
               </div>
             </div>
+  
+  <div className="mt-6">
+  <RecruitingScoreCard player={player} metrics={metrics || []} />
+</div>
 
             <div className="grid gap-6 md:grid-cols-[220px_1fr] md:items-end">
               {player.photo_url ? (

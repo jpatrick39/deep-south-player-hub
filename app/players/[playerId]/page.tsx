@@ -8,6 +8,7 @@ import PlayerMetrics from "./PlayerMetrics";
 import CollegeInterestTracker from "./CollegeInterestTracker";
 import SendPlayerProfileButton from "@/components/SendPlayerProfileButton";
 import CopyPublicProfileLink from "@/components/CopyPublicProfileLink";
+import RecruitingScoreCard from "@/components/RecruitingScoreCard";
 
 function calculateProfileCompletion(
   player: any,
@@ -96,6 +97,10 @@ export default async function PlayerPage({
             href="/players"
             className="text-sm font-medium text-red-600 hover:text-red-700 hover:underline"
           >
+
+  <div className="mt-6">
+  <RecruitingScoreCard player={player} metrics={latestMetrics} />
+</div>
             ← Back to Players
           </Link>
         </div>
