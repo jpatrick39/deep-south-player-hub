@@ -16,6 +16,7 @@ type Branding = {
 export default function BrandingSettingsPage() {
   const [branding, setBranding] = useState<Branding | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     loadBranding();
@@ -30,11 +31,45 @@ export default function BrandingSettingsPage() {
 
     if (error) {
       console.error(error);
-      alert("Could not load organization branding.");
+      alert("Could not load branding.");
       return;
     }
 
     setBranding(data);
+  }
+
+  async function uploadLogo(file: File) {
+    if (!branding) return;
+
+    setUploading(true);
+
+    const fileExt = file.name.split(".").pop();
+    const fileName = `organization-logo-${Date.now()}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("organization-assets")
+      .upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error(uploadError);
+      alert("Logo upload failed.");
+      setUploading(false);
+      return;
+    }
+
+    const { data } = supabase.storage
+      .from("organization-assets")
+      .getPublicUrl(fileName);
+
+    setBranding({
+      ...branding,
+      logo_url: data.publicUrl,
+    });
+
+    setUploading(false);
   }
 
   async function saveBranding() {
@@ -72,48 +107,84 @@ export default function BrandingSettingsPage() {
 
   return (
     <main className="min-h-screen bg-slate-100 p-4 md:p-8">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-5xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold md:text-4xl">
             Organization Branding
           </h1>
           <p className="mt-2 text-slate-600">
-            Customize the platform name, colors, logo, website, and tagline.
+            Customize your organization logo, colors, website, and tagline.
           </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="grid gap-4">
+          <div className="grid gap-5">
             <Input
               label="Organization Name"
               value={branding.name || ""}
-              onChange={(value) =>
-                setBranding({ ...branding, name: value })
-              }
+              onChange={(value) => setBranding({ ...branding, name: value })}
             />
 
-            <Input
-              label="Logo URL"
-              value={branding.logo_url || ""}
-              onChange={(value) =>
-                setBranding({ ...branding, logo_url: value })
-              }
-            />
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Logo
+              </label>
+
+              <div className="grid gap-4 md:grid-cols-[220px_1fr]">
+                <div className="flex h-44 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  {branding.logo_url ? (
+                    <img
+                      src={branding.logo_url}
+                      alt={branding.name}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-sm text-slate-400">No Logo</span>
+                  )}
+                </div>
+
+                <label className="flex h-44 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center hover:bg-slate-100">
+                  <span className="text-4xl">☁️</span>
+                  <span className="mt-2 text-sm font-semibold text-slate-800">
+                    {uploading ? "Uploading..." : "Click to upload logo"}
+                  </span>
+                  <span className="mt-1 text-xs text-slate-500">
+                    PNG, JPG, or WebP recommended
+                  </span>
+
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    disabled={uploading}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) uploadLogo(file);
+                    }}
+                  />
+                </label>
+              </div>
+
+              {branding.logo_url && (
+                <button
+                  onClick={() => setBranding({ ...branding, logo_url: "" })}
+                  className="mt-3 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                >
+                  Remove Logo
+                </button>
+              )}
+            </div>
 
             <Input
               label="Website"
               value={branding.website || ""}
-              onChange={(value) =>
-                setBranding({ ...branding, website: value })
-              }
+              onChange={(value) => setBranding({ ...branding, website: value })}
             />
 
             <Input
               label="Tagline"
               value={branding.tagline || ""}
-              onChange={(value) =>
-                setBranding({ ...branding, tagline: value })
-              }
+              onChange={(value) => setBranding({ ...branding, tagline: value })}
             />
 
             <div className="grid gap-4 md:grid-cols-2">
@@ -137,7 +208,7 @@ export default function BrandingSettingsPage() {
             </div>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-slate-200 overflow-hidden">
+          <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200">
             <div
               className="p-6 text-white"
               style={{
@@ -146,28 +217,33 @@ export default function BrandingSettingsPage() {
                 }, ${branding.primary_color || "#dc2626"})`,
               }}
             >
-              <p className="text-sm uppercase tracking-wide text-white/80">
+              <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
                 Preview
               </p>
 
-              <div className="mt-4 flex items-center gap-4">
+              <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-center">
                 {branding.logo_url ? (
                   <img
                     src={branding.logo_url}
                     alt={branding.name}
-                    className="h-16 w-16 rounded-xl bg-white object-contain p-2"
+                    className="h-20 w-20 rounded-xl bg-white object-contain p-2"
                   />
                 ) : (
-                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-white/10 text-sm">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-white/10 text-sm">
                     Logo
                   </div>
                 )}
 
                 <div>
                   <h2 className="text-3xl font-bold">{branding.name}</h2>
-                  <p className="text-white/80">
+                  <p className="mt-1 text-white/80">
                     {branding.tagline || "Organization tagline"}
                   </p>
+                  {branding.website && (
+                    <p className="mt-1 text-sm text-white/70">
+                      {branding.website}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -175,7 +251,7 @@ export default function BrandingSettingsPage() {
 
           <button
             onClick={saveBranding}
-            disabled={saving}
+            disabled={saving || uploading}
             className="mt-6 rounded-lg bg-red-600 px-5 py-2 font-medium text-white hover:bg-red-700 disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save Branding"}
