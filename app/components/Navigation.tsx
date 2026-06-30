@@ -8,6 +8,7 @@ const navLinks = [
   { href: "/players", label: "Players" },
   { href: "/teams", label: "Teams" },
   { href: "/recruiting", label: "Recruiting" },
+  { href: "/settings/branding", label: "Branding" },
   { href: "/colleges", label: "Colleges" },
   { href: "/colleges/import", label: "Import Colleges" },
   { href: "/colleges/verify", label: "Verify Contacts" },
