@@ -42,6 +42,12 @@ export default async function DashboardPage() {
     .select("*, colleges(name, state, division)")
     .order("created_at", { ascending: false });
 
+  const { data: branding } = await supabase
+  .from("organization_settings")
+  .select("*")
+  .limit(1)
+  .single();
+
   const { data: colleges } = await supabase.from("colleges").select("*");
 
   const playerList = players || [];
@@ -105,10 +111,43 @@ export default async function DashboardPage() {
   return (
     <main className="min-h-screen bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-7xl">
-        <PageHeader
-          title="Organization Dashboard"
-          subtitle="A complete snapshot of player development, team activity, recruiting progress, and profile readiness."
+        <section
+  className="mb-8 overflow-hidden rounded-3xl text-white shadow-sm"
+  style={{
+    background: `linear-gradient(135deg, ${
+      branding?.secondary_color || "#0f172a"
+    }, ${branding?.primary_color || "#dc2626"})`,
+  }}
+>
+  <div className="p-6 md:p-8">
+    <div className="flex flex-col gap-5 md:flex-row md:items-center">
+      {branding?.logo_url ? (
+        <img
+          src={branding.logo_url}
+          alt={branding.name || "Organization Logo"}
+          className="h-20 w-20 rounded-2xl bg-white object-contain p-2"
         />
+      ) : (
+        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/10 text-sm font-bold">
+          Logo
+        </div>
+      )}
+
+      <div>
+        <p className="text-sm font-semibold uppercase tracking-wide text-white/70">
+          Organization Dashboard
+        </p>
+        <h1 className="mt-1 text-3xl font-bold md:text-5xl">
+          {branding?.name || "Deep South Baseball"}
+        </h1>
+        <p className="mt-2 max-w-3xl text-white/80">
+          {branding?.tagline ||
+            "A complete snapshot of player development, team activity, recruiting progress, and profile readiness."}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
         <div className="grid gap-4 md:grid-cols-4">
           <DashboardCard title="Total Players" value={playerList.length} />
