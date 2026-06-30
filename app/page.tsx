@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
-import PageHeader from "@/components/PageHeader";
 
 function calculateCompletion(player: any, interests: any[], metrics: any[]) {
   const checks = [
