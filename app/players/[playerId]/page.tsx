@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { supabase } from "../../../lib/supabase";
 import PhotoUploader from "./PhotoUploader";
 import EditPlayerForm from "./EditPlayerForm";
@@ -85,166 +86,210 @@ export default async function PlayerPage({
     collegeInterests || []
   );
 
+  const latestMetrics = metrics || [];
+
   return (
     <main className="min-h-screen bg-slate-100 p-4 md:p-8">
-      <div className="mx-auto max-w-5xl rounded-xl bg-white p-4 shadow md:p-8">
-        <div className="flex flex-col gap-6 md:flex-row md:items-start">
-          <div>
-            {player.photo_url ? (
-              <img
-                src={player.photo_url}
-                alt={player.name}
-                className="h-40 w-40 rounded-xl border object-cover md:h-48 md:w-48"
-              />
-            ) : (
-              <div className="flex h-40 w-40 items-center justify-center rounded-xl border bg-gray-200 text-gray-500 md:h-48 md:w-48"
-                No Photo
-              </div>
-            )}
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6">
+          <Link
+            href="/players"
+            className="text-sm font-medium text-red-600 hover:text-red-700 hover:underline"
+          >
+            ← Back to Players
+          </Link>
+        </div>
 
-            <PhotoUploader playerId={player.id} />
-          </div>
+        <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-red-900 p-6 text-white md:p-8">
+            <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+              <div className="flex flex-col gap-5 md:flex-row md:items-end">
+                <div>
+                  {player.photo_url ? (
+                    <img
+                      src={player.photo_url}
+                      alt={player.name}
+                      className="h-36 w-36 rounded-2xl border-4 border-white/20 object-cover shadow-lg md:h-44 md:w-44"
+                    />
+                  ) : (
+                    <div className="flex h-36 w-36 items-center justify-center rounded-2xl border-4 border-white/20 bg-white/10 text-sm text-slate-300 shadow-lg md:h-44 md:w-44">
+                      No Photo
+                    </div>
+                  )}
 
-          <div className="flex-1">
-            <h1 className="text-4xl font-bold">{player.name}</h1>
-            <p className="text-gray-600 mt-2">
-              {player.primary_position || "Position"} | Class of{" "}
-              {player.grad_year || "-"}
-            </p>
-
-            <div className="mt-6 border rounded-xl p-4 bg-gray-50">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-xl font-bold">Profile Completion</h2>
-                <span className="text-2xl font-bold">
-                  {completion.percent}%
-                </span>
-              </div>
-
-              <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
-                <div
-                  className="bg-red-600 h-4 rounded-full"
-                  style={{ width: `${completion.percent}%` }}
-                />
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-2 text-sm">
-                {completion.checks.map((check) => (
-                  <div key={check.label}>
-                    {check.complete ? "✅" : "⬜"} {check.label}
+                  <div className="mt-3">
+                    <PhotoUploader playerId={player.id} />
                   </div>
-                ))}
+                </div>
+
+                <div>
+                  <p className="mb-2 inline-flex rounded-full bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                    Recruiting Profile
+                  </p>
+
+                  <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
+                    {player.name}
+                  </h1>
+
+                  <p className="mt-3 text-slate-200">
+                    {player.primary_position || "Position"} | Class of{" "}
+                    {player.grad_year || "-"}
+                  </p>
+
+                  <div className="mt-4 flex flex-wrap gap-2 text-xs">
+                    <Badge>{player.team || "Unassigned Team"}</Badge>
+                    <Badge>{player.school || "School Not Added"}</Badge>
+                    <Badge>GPA: {player.gpa || "-"}</Badge>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-white/10 p-4 backdrop-blur md:min-w-[240px]">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-slate-200">
+                    Profile Completion
+                  </p>
+                  <p className="text-2xl font-bold">{completion.percent}%</p>
+                </div>
+
+                <div className="mt-3 h-3 rounded-full bg-white/20">
+                  <div
+                    className="h-3 rounded-full bg-red-500"
+                    style={{ width: `${completion.percent}%` }}
+                  />
+                </div>
+
+                <p className="mt-2 text-xs text-slate-300">
+                  Complete profiles are easier for college coaches to evaluate.
+                </p>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-8 grid md:grid-cols-2 gap-4">
-          <p>
-            <strong>School:</strong> {player.school || "-"}
-          </p>
-          <p>
-            <strong>Grad Year:</strong> {player.grad_year || "-"}
-          </p>
-          <p>
-            <strong>Primary Position:</strong>{" "}
-            {player.primary_position || "-"}
-          </p>
-          <p>
-            <strong>Secondary Position:</strong>{" "}
-            {player.secondary_position || "-"}
-          </p>
-          <p>
-            <strong>Height:</strong> {player.height || "-"}
-          </p>
-          <p>
-            <strong>Weight:</strong>{" "}
-            {player.weight ? `${player.weight} lbs` : "-"}
-          </p>
-          <p>
-            <strong>Bats:</strong> {player.bats || "-"}
-          </p>
-          <p>
-            <strong>Throws:</strong> {player.throws || "-"}
-          </p>
-          <p>
-            <strong>Team:</strong> {player.team || "-"}
-          </p>
-          <p>
-            <strong>GPA:</strong> {player.gpa || "-"}
-          </p>
-          <p>
-            <strong>Email:</strong> {player.email || "-"}
-          </p>
-        </div>
-
-        {player.bio && (
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-3">Player Bio</h2>
-            <div className="bg-gray-50 border rounded-lg p-4 whitespace-pre-wrap">
-              {player.bio}
-            </div>
+          <div className="grid gap-6 p-4 md:grid-cols-3 md:p-8">
+            <InfoCard label="Height" value={player.height || "-"} />
+            <InfoCard
+              label="Weight"
+              value={player.weight ? `${player.weight} lbs` : "-"}
+            />
+            <InfoCard label="Bats / Throws" value={`${player.bats || "-"} / ${player.throws || "-"}`} />
+            <InfoCard label="Primary Position" value={player.primary_position || "-"} />
+            <InfoCard label="Secondary Position" value={player.secondary_position || "-"} />
+            <InfoCard label="Email" value={player.email || "-"} />
           </div>
-        )}
+        </section>
 
-	<div className="mt-8 flex flex-wrap gap-3">
- 	<CopyPublicProfileLink playerId={player.id} />
-	</div>
+        <div className="mt-6 grid gap-6 lg:grid-cols-3">
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
+            <h2 className="text-2xl font-bold text-slate-900">Player Bio</h2>
 
-        <div className="mt-8">
-          <SendPlayerProfileButton player={player} />
+            <div className="mt-4 rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-700">
+              {player.bio ? (
+                <div className="whitespace-pre-wrap">{player.bio}</div>
+              ) : (
+                <p className="text-slate-500">No bio added yet.</p>
+              )}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-2xl font-bold text-slate-900">
+              Quick Actions
+            </h2>
+
+            <div className="mt-4 flex flex-col gap-3">
+              <CopyPublicProfileLink playerId={player.id} />
+              <SendPlayerProfileButton player={player} />
+            </div>
+          </section>
         </div>
 
-        <EditPlayerForm player={player} />
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-2xl font-bold text-slate-900">
+            Profile Completion Checklist
+          </h2>
 
-        <div className="mt-8">
-  <h2 className="text-2xl font-bold mb-4">Recruiting Videos</h2>
+          <div className="mt-4 grid gap-2 text-sm md:grid-cols-2 lg:grid-cols-4">
+            {completion.checks.map((check) => (
+              <div
+                key={check.label}
+                className={`rounded-xl border px-3 py-2 ${
+                  check.complete
+                    ? "border-green-200 bg-green-50 text-green-800"
+                    : "border-slate-200 bg-slate-50 text-slate-500"
+                }`}
+              >
+                {check.complete ? "✅" : "⬜"} {check.label}
+              </div>
+            ))}
+          </div>
+        </section>
 
-  <div className="grid md:grid-cols-2 gap-4">
-    <VideoUploader
-      playerId={player.id}
-      fieldName="recruiting_video_url"
-      label="Recruiting Video"
-    />
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900">
+            Edit Player Information
+          </h2>
+          <EditPlayerForm player={player} />
+        </section>
 
-    <VideoUploader
-      playerId={player.id}
-      fieldName="hitting_video_url"
-      label="Hitting Video"
-    />
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900">
+            Recruiting Videos
+          </h2>
 
-    <VideoUploader
-      playerId={player.id}
-      fieldName="fielding_video_url"
-      label="Fielding Video"
-    />
+          <div className="grid gap-4 md:grid-cols-2">
+            <VideoUploader
+              playerId={player.id}
+              fieldName="recruiting_video_url"
+              label="Recruiting Video"
+            />
 
-    <VideoUploader
-      playerId={player.id}
-      fieldName="pitching_video_url"
-      label="Pitching Video"
-    />
-  </div>
-</div>
+            <VideoUploader
+              playerId={player.id}
+              fieldName="hitting_video_url"
+              label="Hitting Video"
+            />
 
-        <PlayerMetrics metrics={metrics || []} />
+            <VideoUploader
+              playerId={player.id}
+              fieldName="fielding_video_url"
+              label="Fielding Video"
+            />
 
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Performance Metrics</h2>
+            <VideoUploader
+              playerId={player.id}
+              fieldName="pitching_video_url"
+              label="Pitching Video"
+            />
+          </div>
+        </section>
 
-          <div className="bg-white border rounded-lg overflow-hidden">
-            <table className="w-full">
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <PlayerMetrics metrics={latestMetrics} />
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900">
+            Performance Metrics
+          </h2>
+
+          <div className="overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full min-w-[700px] text-sm">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="p-3 text-left">Metric</th>
-                  <th className="p-3 text-left">Value</th>
-                  <th className="p-3 text-left">Date</th>
+                <tr className="bg-slate-100 text-left text-slate-700">
+                  <th className="p-3">Metric</th>
+                  <th className="p-3">Value</th>
+                  <th className="p-3">Date</th>
                 </tr>
               </thead>
 
               <tbody>
-                {metrics?.map((metric) => (
-                  <tr key={metric.id} className="border-t">
-                    <td className="p-3">{metric.metric_type}</td>
+                {latestMetrics.map((metric) => (
+                  <tr
+                    key={metric.id}
+                    className="border-t border-slate-200 hover:bg-slate-50"
+                  >
+                    <td className="p-3 font-medium">{metric.metric_type}</td>
                     <td className="p-3">
                       {metric.value} {metric.unit}
                     </td>
@@ -254,9 +299,9 @@ export default async function PlayerPage({
                   </tr>
                 ))}
 
-                {(!metrics || metrics.length === 0) && (
+                {latestMetrics.length === 0 && (
                   <tr>
-                    <td className="p-3 text-gray-500" colSpan={3}>
+                    <td className="p-3 text-slate-500" colSpan={3}>
                       No metrics added yet.
                     </td>
                   </tr>
@@ -265,15 +310,38 @@ export default async function PlayerPage({
             </table>
           </div>
 
-          <AddMetricForm playerId={playerId} />
-        </div>
+          <div className="mt-4">
+            <AddMetricForm playerId={playerId} />
+          </div>
+        </section>
 
-        <CollegeInterestTracker
-          playerId={playerId}
-          interests={collegeInterests || []}
-          colleges={colleges || []}
-        />
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <CollegeInterestTracker
+            playerId={playerId}
+            interests={collegeInterests || []}
+            colleges={colleges || []}
+          />
+        </section>
       </div>
     </main>
+  );
+}
+
+function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="rounded-full bg-white/10 px-3 py-1 font-medium text-slate-100 ring-1 ring-white/20">
+      {children}
+    </span>
+  );
+}
+
+function InfoCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        {label}
+      </p>
+      <p className="mt-2 text-lg font-bold text-slate-900">{value}</p>
+    </div>
   );
 }

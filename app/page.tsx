@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
+import StatCard from "@/components/StatCard";
 
 export default async function DashboardPage() {
   const { data: players } = await supabase

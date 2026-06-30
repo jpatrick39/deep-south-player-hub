@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { supabase } from "../../lib/supabase";
+import PageHeader from "@/components/PageHeader";
+import StatCard from "@/components/StatCard";
 
 export default async function PlayersPage() {
   const { data: players } = await supabase
@@ -11,7 +13,10 @@ export default async function PlayersPage() {
     <main className="min-h-screen bg-slate-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Players</h1>
+         <PageHeader
+  title="Recruiting Dashboard"
+  subtitle="Track player recruiting activity, college interest, coach contact, offers, commitments, and profile readiness."
+/>
 
           <Link href="/players/new" className="bg-red-600 text-white px-4 py-2 rounded-lg">
             Add Player

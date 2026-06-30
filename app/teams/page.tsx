@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { supabase } from "../../lib/supabase";
+import PageHeader from "@/components/PageHeader";
+import StatCard from "@/components/StatCard";
 
 export default async function TeamsPage() {
   const { data: players } = await supabase
@@ -20,30 +22,33 @@ export default async function TeamsPage() {
   return (
     <main className="min-h-screen bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold">Teams & Rosters</h1>
-          <p className="mt-2 text-gray-600">
-            View players grouped by team assignment.
-          </p>
-        </div>
+        <PageHeader
+          title="Teams & Rosters"
+          subtitle="View players grouped by team assignment."
+        />
 
         <div className="grid gap-6">
           {teams.map(([teamName, teamPlayers]: any) => (
-            <section key={teamName} className="rounded-xl bg-white p-6 shadow">
-              <div className="mb-4 flex items-center justify-between">
+            <section
+              key={teamName}
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
+            >
+              <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold">{teamName}</h2>
-                  <p className="text-sm text-gray-500">
+                  <h2 className="text-2xl font-bold text-slate-900">
+                    {teamName}
+                  </h2>
+                  <p className="text-sm text-slate-500">
                     {teamPlayers.length} player
                     {teamPlayers.length === 1 ? "" : "s"}
                   </p>
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-sm">
+              <div className="overflow-x-auto rounded-xl border border-slate-200">
+                <table className="w-full min-w-[700px] border-collapse text-sm">
                   <thead>
-                    <tr className="bg-gray-100 text-left">
+                    <tr className="bg-slate-100 text-left text-slate-700">
                       <th className="p-3">Player</th>
                       <th className="p-3">School</th>
                       <th className="p-3">Grad Year</th>
@@ -56,8 +61,13 @@ export default async function TeamsPage() {
 
                   <tbody>
                     {teamPlayers.map((player: any) => (
-                      <tr key={player.id} className="border-t">
-                        <td className="p-3 font-medium">{player.name}</td>
+                      <tr
+                        key={player.id}
+                        className="border-t border-slate-200 hover:bg-slate-50"
+                      >
+                        <td className="p-3 font-medium text-slate-900">
+                          {player.name}
+                        </td>
                         <td className="p-3">{player.school || "-"}</td>
                         <td className="p-3">{player.grad_year || "-"}</td>
                         <td className="p-3">
@@ -68,7 +78,7 @@ export default async function TeamsPage() {
                         <td className="p-3">
                           <Link
                             href={`/players/${player.id}`}
-                            className="text-red-600 hover:underline"
+                            className="font-medium text-red-600 hover:text-red-700 hover:underline"
                           >
                             View Profile
                           </Link>
@@ -82,7 +92,7 @@ export default async function TeamsPage() {
           ))}
 
           {teams.length === 0 && (
-            <div className="rounded-xl bg-white p-6 text-gray-500 shadow">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 text-slate-500 shadow-sm">
               No players found.
             </div>
           )}

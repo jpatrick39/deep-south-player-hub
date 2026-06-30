@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import PageHeader from "@/components/PageHeader";
 import {
   BarChart,
   Bar,
@@ -43,9 +44,7 @@ function calculateCompletion(player: any, interests: any[]) {
     interests.some((i) => i.player_id === player.id),
   ];
 
-  return Math.round(
-    (checks.filter(Boolean).length / checks.length) * 100
-  );
+  return Math.round((checks.filter(Boolean).length / checks.length) * 100);
 }
 
 export default function RecruitingDashboardPage() {
@@ -80,6 +79,7 @@ export default function RecruitingDashboardPage() {
     const uniqueCollegeIds = new Set(interests.map((i) => i.college_id));
 
     const statusCounts: Record<string, number> = {};
+
     STATUS_ORDER.forEach((status) => {
       statusCounts[status] = interests.filter((i) => i.status === status).length;
     });
@@ -130,13 +130,10 @@ export default function RecruitingDashboardPage() {
   return (
     <main className="min-h-screen bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold">Recruiting Dashboard</h1>
-          <p className="mt-2 text-gray-600">
-            Track player recruiting activity, college interest, coach contact,
-            offers, commitments, and profile readiness.
-          </p>
-        </div>
+        <PageHeader
+          title="Recruiting Dashboard"
+          subtitle="Track player recruiting activity, college interest, coach contact, offers, commitments, and profile readiness."
+        />
 
         <div className="grid gap-4 md:grid-cols-4">
           <StatCard title="Players Being Recruited" value={stats.recruitedPlayers} />
@@ -150,7 +147,7 @@ export default function RecruitingDashboardPage() {
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
-          <div className="rounded-xl bg-white p-6 shadow lg:col-span-2">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
             <h2 className="mb-4 text-2xl font-bold">Recruiting Funnel</h2>
 
             <div className="h-80">
@@ -171,7 +168,7 @@ export default function RecruitingDashboardPage() {
             </div>
           </div>
 
-          <div className="rounded-xl bg-white p-6 shadow">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-2xl font-bold">Recruiting Summary</h2>
 
             <div className="space-y-4 text-sm">
@@ -202,13 +199,13 @@ export default function RecruitingDashboardPage() {
           </div>
         </div>
 
-        <div className="mt-8 rounded-xl bg-white p-6 shadow">
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-2xl font-bold">Recent Recruiting Activity</h2>
 
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-sm">
+          <div className="overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full min-w-[800px] border-collapse text-sm">
               <thead>
-                <tr className="bg-gray-100 text-left">
+                <tr className="bg-slate-100 text-left text-slate-700">
                   <th className="p-3">Player</th>
                   <th className="p-3">College</th>
                   <th className="p-3">Division</th>
@@ -219,18 +216,14 @@ export default function RecruitingDashboardPage() {
 
               <tbody>
                 {interests.map((interest) => {
-                  const player = players.find(
-                    (p) => p.id === interest.player_id
-                  );
+                  const player = players.find((p) => p.id === interest.player_id);
 
                   return (
-                    <tr key={interest.id} className="border-t">
+                    <tr key={interest.id} className="border-t border-slate-200">
                       <td className="p-3 font-medium">
                         {player?.name || "Unknown Player"}
                       </td>
-                      <td className="p-3">
-                        {interest.colleges?.name || "-"}
-                      </td>
+                      <td className="p-3">{interest.colleges?.name || "-"}</td>
                       <td className="p-3">
                         {interest.colleges?.division || "-"}
                       </td>
@@ -272,7 +265,7 @@ function StatCard({
   value: string | number;
 }) {
   return (
-    <div className="rounded-xl bg-white p-5 shadow">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <p className="text-sm text-gray-500">{title}</p>
       <p className="mt-2 text-3xl font-bold">{value}</p>
     </div>

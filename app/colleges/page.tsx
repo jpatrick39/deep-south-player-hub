@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import CollegeContactEditor from "@/components/CollegeContactEditor";
+import StatCard from "@/components/StatCard";
 
 type College = {
   id: string;
