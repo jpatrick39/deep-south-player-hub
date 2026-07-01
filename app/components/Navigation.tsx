@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import LogoutButton from "@/components/LogoutButton";
 
 type Branding = {
   name: string;
@@ -21,6 +22,7 @@ const navLinks = [
   { href: "/colleges/import", label: "Import Colleges" },
   { href: "/colleges/verify", label: "Verify Contacts" },
   { href: "/settings/branding", label: "Branding" },
+<LogoutButton />
 ];
 
 export default function Navigation() {
